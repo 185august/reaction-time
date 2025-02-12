@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>reaction time</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #app {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #btn1 {
+
+            cursor: pointer;
+        }
+
+        .allCircles {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            justify-content: center;
+            align-content: center;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        .circles {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: blue;
+        }
+
+        .lightOn {
+            border-radius: 50%;
+            align-content: space-around;
+            cursor: pointer;
+            width: 100px;
+            margin: 5px;
+            height: 100px;
+            background-color: rgb(240, 240, 57);
+        }
+    </style>
+</head>
+
+<body onload="loadMessage()">
+
+    <div id="app"></div>
+    <script>
+        // Model
+
+        let reactionTimes = [];
+        let startMessage = '';
+        let circleHtml = [];
+        let readyToStart = false;
+        let timeSpent;
+        let startTime;
+
+
+        // View
+
+        function updateView() {
+            document.getElementById('app').innerHTML = /*HTML*/ `
+            ${readyToStart ?
+                    `<div class="allCircles">
+                        ${circleHtml.join('')}
+                    </div>` :
+                    `<div class="button-container">
+                        <button id="btn1" onclick="startReactionTest()">${startMessage}</button>
+                    </div>`
+                }                    
+            <div> ${timeSpent ?? ''}
+            `;
+        }
+
+        // Controller
+
+        function loadMessage() {
+            if (!readyToStart) {
+                startMessage = 'Click 10 circles as fast as you can!';
+                drawCircles();
+            }
+        }
+
+        function startReactionTest() {
+            readyToStart = true;
+            drawCircles();
+            lightOn();
+        }
+
+        function drawCircles() {
+            circleHtml = [];
+            for (let i = 0; i < 25; i++) {
+                circleHtml.push(`<div class="circles"> </div>`);
+            }
+            updateView();
+        }
+
+
+        function reactionTimeClick() {
+            let finishTime = new Date().getTime();
+            let spentMilliseconds = Math.floor(finishTime - startTime);
+            let spentSeconds = spentMilliseconds / 1000;
+            reactionTimes.push(spentSeconds)
+            if (reactionTimes.length == 10) {
+                let getAverage = reactionTimes.reduce((sum, currentValue) => sum + currentValue) / reactionTimes.length;
+                timeSpent = getAverage.toFixed(3);
+                resetGame();
+                updateView();
+            } else {
+                startReactionTest();
+            }
+        }
+
+        function lightOn() {
+            let currentRngNumber;
+            currentRngNumber = Math.floor(Math.random() * 25)
+            circleHtml.splice(currentRngNumber, 1, `<div onclick="reactionTimeClick()" class="lightOn"> </div>`);
+            startTime = new Date().getTime();
+            updateView();
+        }
+
+        function resetGame() {
+            alert('Your avarage reaction time was: ' + timeSpent)
+            reactionTimes = [];
+            circleHtml = [];
+            readyToStart = false;
+            timeSpent = null;
+        }
+
+    </script>
+    </div>
+</body>
+</html>
