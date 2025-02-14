@@ -83,7 +83,6 @@
                         <button id="btn1" onclick="startReactionTest()">${startMessage}</button>
                     </div>`
                 }                    
-            <div> ${timeSpent ?? ''}
             `;
         }
 
@@ -110,11 +109,15 @@
             updateView();
         }
 
-
-        function reactionTimeClick() {
+        function getSpentSeconds() {
             let finishTime = new Date().getTime();
             let spentMilliseconds = Math.floor(finishTime - startTime);
-            let spentSeconds = spentMilliseconds / 1000;
+            return spentMilliseconds / 1000;
+
+        }
+
+        function reactionTimeClick() {
+            let spentSeconds = getSpentSeconds();
             reactionTimes.push(spentSeconds)
             if (reactionTimes.length == 10) {
                 let getAverage = reactionTimes.reduce((sum, currentValue) => sum + currentValue) / reactionTimes.length;
@@ -145,4 +148,5 @@
     </script>
     </div>
 </body>
+
 </html>
