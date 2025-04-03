@@ -86,6 +86,21 @@
             `;
         }
 
+        function drawCircles() {
+            circleHtml = [];
+            for (let i = 0; i < 25; i++) {
+                circleHtml.push(`<div class="circles"> </div>`);
+            }
+            updateView();
+        }
+
+        function lightOn() {
+            /* let currentRngNumber;
+            currentRngNumber = Math.floor(Math.random() * 25) */
+            circleHtml.splice(randomNumber(25), 1, `<div onclick="reactionTimeClick()" class="lightOn"> </div>`);
+            startTime = new Date().getTime();
+            updateView();
+        }
         // Controller
 
         function loadMessage() {
@@ -101,13 +116,6 @@
             lightOn();
         }
 
-        function drawCircles() {
-            circleHtml = [];
-            for (let i = 0; i < 25; i++) {
-                circleHtml.push(`<div class="circles"> </div>`);
-            }
-            updateView();
-        }
 
         function getSpentSeconds() {
             let finishTime = new Date().getTime();
@@ -129,13 +137,10 @@
             }
         }
 
-        function lightOn() {
-            let currentRngNumber;
-            currentRngNumber = Math.floor(Math.random() * 25)
-            circleHtml.splice(currentRngNumber, 1, `<div onclick="reactionTimeClick()" class="lightOn"> </div>`);
-            startTime = new Date().getTime();
-            updateView();
+        function randomNumber(maxNum) {
+            return Math.floor(Math.random() * maxNum)
         }
+
 
         function resetGame() {
             alert('Your avarage reaction time was: ' + timeSpent)
